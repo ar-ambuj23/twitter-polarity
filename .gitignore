@@ -21,3 +21,6 @@ app/*.ntvs*
 app/*.njsproj
 app/*.sln
 app/*.sw?
+
+# Credentials
+*/Credentials
