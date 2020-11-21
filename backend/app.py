@@ -8,8 +8,9 @@ app = Flask(__name__)
 @app.route('/polarity', methods = ['GET','POST'])
 def getPolarity():
     hashtag = 'trump'
+    count = 1000
     loc = 'USA'
-    result = perDayPolarity(hashtag, loc)
+    result = perDayPolarity(hashtag, count, loc)
     return Response(json.dumps(result, default=default),  mimetype='application/json')
 
 def default(o):

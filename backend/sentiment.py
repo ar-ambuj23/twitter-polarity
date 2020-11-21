@@ -19,27 +19,26 @@ def sentiment_label(score):
         return -1
     else:
         return 0
-    
 
-def perDayPolarity(hashtag, loc, count=500):
+def perDayPolarity(hashtag, count, loc):
 
-    # Get tweets_dict of top n tweets by country for this hashtag 
     twitter_api = api.TwitterAPI('api/credentials/twitter_credentials.json')
-    placeId = twitter_api.getPlaceIdByCountry(loc)
-    query = '{} place:{}'.format(hashtag, placeId)
-    list_of_tweets = twitter_api.search(query=query, count=count)
+    
+    # Get tweets_dict of top n tweets by country for this hashtag 
+    TweetsByCount = twitter_api.getTweetsByCount(query=hashtag, count=count, loc=loc)
+    list_of_tweets = twitter_api.getFeatures(TweetsByCount, feature_list=['id', 'created_at', 'full_text'])
     
     # Add Sentiment score for each tweet_feature
     for tweet_dict in list_of_tweets:
-        tweet_dict['sentiment'] = get_sentiment(tweet_dict['text'])
-        
-    # Get polarity per day for a hashtag
+        tweet_dict['sentiment'] = get_sentiment(tweet_dict['full_text'])
+    
+    # Get polarity per day for the hashtag
     cols = list(list_of_tweets[0].keys())
     features = [list(tweet_dict.values()) for tweet_dict in list_of_tweets]
     
     tweet_df = pd.DataFrame(columns=cols, data=features)
     tweet_df['sentiment_label'] = tweet_df.sentiment.apply(lambda x: sentiment_label(x))
-    date_groups = tweet_df.groupby(by=pd.to_datetime(tweet_df['timestamp'].dt.date))
+    date_groups = tweet_df.groupby(by=pd.to_datetime(pd.to_datetime(tweet_df['created_at']).dt.date))
     date_polarity_counts = []
     for date, df in date_groups:
         polarity = dict()
@@ -49,5 +48,3 @@ def perDayPolarity(hashtag, loc, count=500):
         date_polarity_counts.append(polarity)
     
     return date_polarity_counts
-
-
