@@ -25,7 +25,7 @@ class TwitterAPI():
             placeId = self.getPlaceIdByCountry(loc)
             query = '{} place:{}'.format(query, placeId)
 
-        tweets = tweet_batch = self.api.search(q=query, count=count, lang=lang, result_type=result_type, tweet_mode='extended')
+        tweets = tweet_batch = self.api.search(q=query, count=count, lang=lang, result_type=result_type, tweet_mode='extended', include_entities=False)
         ct = 1
         while len(tweets) < count and ct < _max_queries:
             tweet_batch = self.api.search(q=query, 
@@ -61,7 +61,8 @@ class TwitterAPI():
             until = dates[1],
             lang = lang,
             result_type = result_type,
-            tweet_mode ='extended')
+            tweet_mode ='extended',
+            include_entities=False)
         return cursor.items(count)
         
         

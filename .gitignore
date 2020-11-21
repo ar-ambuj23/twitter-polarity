@@ -33,3 +33,4 @@ backend/__pycache__/
 backend/api/__pycache__/
 backend/api/credentials/
 backend/api/.ipynb_checkpoints/
+app/package-lock.json

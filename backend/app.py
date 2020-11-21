@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/polarityByCount', methods = ['GET','POST'])
 def getPolarityByCount():
-    hashtag = 'trump'
+    hashtag = '#trump'
     count = 100
     loc = 'USA'
     result = polarityByCount(hashtag, count, loc)
@@ -16,7 +16,7 @@ def getPolarityByCount():
 
 @app.route('/polarityByDay', methods = ['GET','POST'])
 def getPolarityByDay():
-    hashtag = 'trump'
+    hashtag = '#trump'
     count = 100
     loc = 'USA'
     result = polarityByDay(hashtag, count, loc)
@@ -27,4 +27,4 @@ def default(o):
         return o.__str__()
 
 if __name__ == '__main__':
-     app.run(host='0.0.0.0',port=8000)
+     app.run(host='0.0.0.0',port=8000, debug=True)
