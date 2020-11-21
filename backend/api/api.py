@@ -1,6 +1,8 @@
 import json
 import tweepy
 import os
+import datetime
+from collections import defaultdict
 
 class TwitterAPI():
     def __init__(self, credentials_file_path = os.path.join(os.getcwd(),'credentials/twitter_credentials.json')):
@@ -46,7 +48,7 @@ class TwitterAPI():
         for dateIdx in range(len(listOfDates)-1):
             tweets_cursor = self.getCursor(query=query, dates=(listOfDates[dateIdx], listOfDates[dateIdx+1]), count=count, lang=lang, result_type=result_type)
             for tweet in tweets_cursor:
-                d[datetime.datetime.strptime(listOfDates[dateIdx], '%Y-%m-%d')].append((tweet.id, tweet.full_text))
+                d[datetime.datetime.strptime(listOfDates[dateIdx], '%Y-%m-%d')].append({'id':tweet._json['id'], 'full_text':tweet._json['full_text']})
 
         return d
 
