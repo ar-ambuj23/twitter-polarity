@@ -87,4 +87,13 @@ class TwitterAPI():
     
     def getPlaceIdByCountry(self, loc, granularity="country"):
         places = self.api.geo_search(query=loc, granularity="country")
+        for place in places:
+            if place.country == loc:
+                return place.id
+
+        # Hacky fix to return 1st query result if no match
         return places[0].id
+    
+    def getTrendsByWOEID(self, woeid):
+        trends = self.api.trends_place(woeid)
+        return trends[0]

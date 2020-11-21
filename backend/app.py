@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, Response, request
-from sentiment import polarityByCount, polarityByDay
+from sentiment import polarityByCount, polarityByDay, trendingHashtags
+from woe import woe_map
 
 import json
 import datetime
@@ -10,8 +11,15 @@ def process_request(args):
     search_params = dict()
     search_params['hashtag'] = '#' + args['hashtag']
     search_params['count'] = int(args['count'])
-    search_params['loc'] = args['loc']
+    search_params['loc'] = woe_map[args['loc']]['name']
     return search_params
+
+@app.route('/home/<country>')
+def getTrendingHashtags(country):
+    woeid = woe_map[country]['woe']
+    loc = woe_map[country]['name']
+    trends = trendingHashtags(woeid=woeid, loc=loc)
+    return jsonify(trends)
 
 @app.route('/polarityByCount', methods = ['GET','POST'])
 def getPolarityByCount():

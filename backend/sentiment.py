@@ -74,3 +74,18 @@ def polarityByDay(hashtag, count, loc):
         date_polarity_counts.append(polarity)
     
     return date_polarity_counts
+
+def trendingHashtags(woeid, loc, n_results=10, n_tweets=10):
+    twitter_api = api.TwitterAPI('api/credentials/twitter_credentials.json')
+    trend_info = twitter_api.getTrendsByWOEID(woeid)
+
+    landing_page = []
+    for trend in trend_info['trends'][:n_results]:
+        hashtag_info = {}
+        query = trend['query']
+        date_counts = polarityByDay(hashtag=query, loc=loc, count=n_tweets)
+        hashtag_info['date_polarity_counts'] = date_counts
+        hashtag_info.update(trend)
+        landing_page.append(hashtag_info)
+    
+    return landing_page
