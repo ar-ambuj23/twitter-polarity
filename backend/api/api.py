@@ -32,6 +32,46 @@ class TwitterAPI():
             tweets.extend(tweet_batch)
             ct += 1
         return tweets
+    
+    def getTweets7DaysByCount(self, query, count, loc=None, lang='en', result_type='mixed'):
+
+        listOfDates = self.getListOfLast7Dates(datetime.date.today())
+        
+        # If Country(loc) given, search on basis of country
+        if(loc):
+            placeId = self.getPlaceIdByCountry(loc)
+            query = '{} place:{}'.format(query, placeId)
+        
+        d = defaultdict(list)
+        for dateIdx in range(len(listOfDates)-1):
+            tweets_cursor = self.getCursor(query=query, dates=(listOfDates[dateIdx], listOfDates[dateIdx+1]), count=count, lang=lang, result_type=result_type)
+            for tweet in tweets_cursor:
+                d[datetime.datetime.strptime(listOfDates[dateIdx], '%Y-%m-%d')].append((tweet.id, tweet.full_text))
+
+        return d
+
+        
+    def getCursor(self, query, dates, count, lang, result_type):
+        cursor = tweepy.Cursor(
+            self.api.search,
+            q = query,
+            since = dates[0],
+            until = dates[1],
+            lang = lang,
+            result_type = result_type,
+            tweet_mode ='extended')
+        return cursor.items(count)
+        
+        
+    def getListOfLast7Dates(self, end_date):
+        start_date = end_date - datetime.timedelta(days=6)
+        delta = datetime.timedelta(days=1)
+        listOfDates = []
+        while start_date <= end_date+datetime.timedelta(days=1):
+            listOfDates.append(start_date.strftime('%Y-%m-%d'))
+            start_date += delta
+        return listOfDates
+        
 
     def getFeatures(self, tweets, feature_list):
         features = []
