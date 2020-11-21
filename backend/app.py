@@ -10,7 +10,6 @@ def getPolarity():
     hashtag = 'trump'
     loc = 'USA'
     result = perDayPolarity(hashtag, loc)
-    print(result)
     return Response(json.dumps(result, default=default),  mimetype='application/json')
 
 def default(o):
