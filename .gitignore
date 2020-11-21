@@ -27,3 +27,8 @@ app/*.sw?
 
 #csv
 misc/*.csv
+
+.DS_Store
+backend/__pycache__/
+backend/api/__pycache__/
+backend/api/credentials/
