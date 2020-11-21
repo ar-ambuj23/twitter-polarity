@@ -24,3 +24,6 @@ app/*.sw?
 
 # Credentials
 */Credentials
+
+backend/api/credentials
+
