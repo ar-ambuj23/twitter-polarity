@@ -2,6 +2,7 @@ from nltk.sentiment import SentimentAnalyzer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from api import api
 from collections import defaultdict, Counter
+from scipy.stats import chisquare
 
 import pandas as pd
 
@@ -66,11 +67,23 @@ def polarityByDay(hashtag, count, loc):
             
     # Get date_polarity_counts
     date_polarity_counts = []
+    labels = [-1, 0, 1]
     for date in tweets7DaysByCount:
         polarity = dict()
         polarity['date'] = date
         sentiment_labels = [d['sentiment_label'] for d in tweets7DaysByCount[date]]
-        polarity.update(Counter(sentiment_labels))
+        label_counts = dict(Counter(sentiment_labels))
+        for l in labels:
+            label_counts[l] = label_counts.get(l, 0)
+        try:
+            polarity_index = 1. / chisquare(list(label_counts.values()))[0]
+        except ZeroDivisionError:
+            polarity_index = 0
+        polarity['polarity_index'] = polarity_index
+        total_tweets = sum(label_counts.values())
+        for l in label_counts.keys():
+            label_counts[l] /= total_tweets
+        polarity.update(label_counts)
         date_polarity_counts.append(polarity)
     
     return date_polarity_counts
