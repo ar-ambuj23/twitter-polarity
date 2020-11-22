@@ -99,6 +99,7 @@ def trendingHashtags(woeid, loc, n_results=10, n_tweets=10):
         date_counts = polarityByDay(hashtag=query, loc=loc, count=n_tweets)
         hashtag_info['date_polarity_counts'] = date_counts
         hashtag_info.update(trend)
+        hashtag_info['show'] = False
         landing_page.append(hashtag_info)
     
     return landing_page
