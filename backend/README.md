@@ -12,5 +12,5 @@ Now, run the flask app using
 ```bash
 python app.py
 ```
-- Navigate to localhost:8000/home/<country> to view the trending tweets for the entered country.
+- Navigate to `http://localhost:8000/home/<country>` where `country` is either `USA` or `UK` to view the trending tweets for the entered country.
 - Click on any Polarity graph to view more detailed view of Polarity analysis for a particular hashtag.
